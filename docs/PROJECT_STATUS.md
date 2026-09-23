@@ -27,6 +27,7 @@ Design the protected `POST /entries` slice, including request validation, verifi
 
 ## Next
 
+- Review the pushed `feat/entry-date-validation` branch in a pull request before merging it into `main`.
 - Plan authentication and ownership enforcement for `POST /entries`, and choose the database representation of date-only `entryDate` before implementing persistence.
 - Reconcile the generated API's Oxlint setup with the original ESLint direction before settling the future CI lint gate.
 
@@ -52,7 +53,7 @@ Design the protected `POST /entries` slice, including request validation, verifi
 - The user ran `pnpm --filter mobile exec tsc --noEmit`; it completed with no diagnostics.
 - The user ran the API in watch mode; TypeScript reported 0 errors, Nest started, and it mapped `GET /`. The later pnpm exit error followed the user's termination of watch mode.
 - The user ran `pnpm --filter api run test:e2e` before the type-only edit to that test file; Vitest passed the generated test for `GET /`, asserting HTTP 200 and `Hello World!`. It has not been rerun after the edit.
-- The user's push output confirmed `16446df` updated GitHub's `main`. Immediately after that push, a read-only `git status --short --branch` returned only `## main...origin/main`; later validator and documentation work is still local. No GitHub Actions workflow exists yet.
+- The user's push output confirmed baseline commit `16446df` on GitHub's `main` and validator commit `ccd8cb0` on `origin/feat/entry-date-validation`. Immediately after the feature push, a read-only `git status --short --branch` showed the branch tracking its remote with no pending files or unpushed commits. No GitHub Actions workflow exists yet.
 - The user ran the focused `entryDate` Vitest file: 11 tests passed. The full API unit suite passed 2 files and 12 tests, including the generated controller test.
 - The user ran `pnpm --filter api exec tsc --noEmit` after the generated HTTP test's type fix; it completed without diagnostics.
 - The user ran `pnpm --filter api run lint`; Oxlint reported 0 warnings and 0 errors across 8 files. After setting Prettier's `endOfLine` to `auto` and formatting three files, the non-writing API TypeScript format check reported that all matched files use Prettier style.
