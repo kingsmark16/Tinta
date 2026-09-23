@@ -6,7 +6,7 @@ Tinta is a private digital diary for writing daily thoughts, tracking moods, sav
 
 ## Project status
 
-The pnpm workspace, Expo mobile starter, and NestJS API starter are scaffolded. Dependencies are installed, and the starter web app and API baseline have been verified. Tinta features, authentication, and persistence are not implemented yet. See [project status](docs/PROJECT_STATUS.md) for the current goal and verified checks.
+The pnpm workspace, Expo mobile starter, and NestJS API starter are scaffolded. Dependencies are installed, and the starter web app and API baseline have been verified. A standalone API `entryDate` validator is implemented and unit-tested; entry routes, authentication, and persistence are still planned. See [project status](docs/PROJECT_STATUS.md) for the current goal and verified checks.
 
 ## Technology and planned integrations
 

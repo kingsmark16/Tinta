@@ -1,6 +1,6 @@
 # Testing
 
-This is Tinta's testing plan. The NestJS API scaffold has Vitest configured. Its generated API HTTP test has passed; a generated unit test exists but has not been run. No Tinta feature tests exist yet.
+This is Tinta's testing plan. The NestJS API uses Vitest. The pure `entryDate` validator has 11 passing unit cases, and the generated controller unit test has also passed. The generated API HTTP test passed earlier, before a type-only edit to that test file; it has not been rerun since. No Tinta entry HTTP route exists yet.
 
 ## Test levels
 
@@ -31,8 +31,14 @@ Also cover important domain rules, search/filter/pagination behavior when added,
 
 ## Running and reporting
 
-From the repository root in PowerShell, with workspace dependencies installed, run `pnpm --filter api run test:e2e` to execute the generated API HTTP test. The command starts and closes Nest inside the test process, so this starter test does not require a separately running API or database. Vitest may write local cache files.
+Run the commands below in PowerShell from the repository root, `C:\Users\marka\Desktop\Tinta`, with workspace dependencies installed. Vitest may write local cache files.
 
-The user's run passed one test: `GET /` returned HTTP 200 and `Hello World!`. A successful rerun should report the test as passed and exit normally. This result does not verify authentication, persistence, or a mobile-to-API flow. The generated unit test, future integration tests, and mobile tests remain unverified. Record new results and unresolved gaps in `PROJECT_STATUS.md`; never describe an unrun or failing check as passed.
+| Command | Purpose and expected behavior | Observed result |
+| --- | --- | --- |
+| `pnpm --filter api exec vitest run src/entries/entry-date.spec.ts` | Runs the pure date validator cases without a server or database; success means the focused test file passes and exits with code 0. | 11 tests passed, covering valid dates, leap-year boundaries, impossible dates, exact format, and non-string input. |
+| `pnpm --filter api run test` | Runs all API unit tests without a server or database; success means each discovered unit test passes and exits with code 0. | 2 files and 12 tests passed, including the generated controller test and the date validator tests. |
+| `pnpm --filter api run test:e2e` | Starts and closes Nest inside the test process and sends an HTTP request; a separate running API or database is not required for the starter test. Success means the HTTP test passes and exits with code 0. | One generated `GET /` test previously passed with HTTP 200 and `Hello World!`, before the type-only edit to the test file. It has not been rerun since. |
+
+The date unit tests verify the standalone validator, not an entry route or storage across time zones. Authentication, ownership, persistence, database integration, and mobile-to-API behavior remain unverified. Record new results and unresolved gaps in `PROJECT_STATUS.md`; never describe an unrun or failing check as passed.
 
 Add each test class to CI only after its equivalent local command passes. Database integration tests need an isolated test database, committed migrations, synthetic fixtures, and cleanup. See [GIT_WORKFLOW.md](GIT_WORKFLOW.md) for the planned checks; no CI workflow exists yet.

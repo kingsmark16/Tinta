@@ -2,11 +2,11 @@
 
 ## Current Phase
 
-The pnpm workspace, Expo mobile starter, and NestJS API starter are scaffolded. The mobile starter was verified on web, and the API started and passed its generated Vitest HTTP test. The original product and engineering brief has been reconciled into the repository documentation; Tinta features remain unimplemented.
+The pnpm workspace, Expo mobile starter, and NestJS API starter are scaffolded. The mobile starter was verified on web, and the API started and passed its generated Vitest HTTP test. The first Tinta domain rule, a standalone API validator for `entryDate`, is implemented and unit-tested. Entry HTTP routes, authentication, and persistence remain planned.
 
 ## Current Goal
 
-Review the documentation checkpoint and let the user make the first Git commit and push. Then implement the first small create-entry domain rule: validation of the user's intended diary day.
+Design the protected `POST /entries` slice, including request validation, verified ownership, and the date-only persistence representation.
 
 ## Completed
 
@@ -17,16 +17,18 @@ Review the documentation checkpoint and let the user make the first Git commit a
 - The user scaffolded `apps/api` with NestJS 12, ESM, TypeScript, and Vitest, then installed dependencies for all three workspace projects from the repository root.
 - Updated the local development and testing guides for the verified baseline, and recorded the ESM/Vitest choice. Agreed on the initial create-entry request, response, and diary-day rules.
 - Reconciled the original brief into product, architecture, security, development, testing, deployment, learning, decision, and Git/CI guidance. The later Vitest choice supersedes the original Jest plan.
+- The user committed the scaffold and documentation as `16446df` (`chore: scaffold Tinta workspace`) and pushed it to `origin/main`.
+- The user added a pure `entryDate` validator for exact `YYYY-MM-DD` calendar dates and 11 focused Vitest cases, including leap-year and invalid-input cases.
+- Changed the generated API HTTP test to use the Node HTTP server type for TypeScript checking. The user configured Prettier to preserve existing line-ending styles and formatted the three files reported by the check.
 
 ## In Progress
 
-- Both applications are still generated starters. No Tinta feature, authentication, or persistence has been implemented. The initial Git checkpoint is pending; CI has not been configured.
+- Work is on the `feat/entry-date-validation` branch. The standalone date validator is not connected to an HTTP route. Authentication and persistence have not been implemented, and CI has not been configured.
 
 ## Next
 
-- The user reviews the pending project files, then stages, commits, and pushes the baseline using [GIT_WORKFLOW.md](GIT_WORKFLOW.md). Confirm the remote commit and update this status only after the push actually succeeds.
-- Add and test a pure API validator for `entryDate` in exact `YYYY-MM-DD` form, including real calendar dates and leap years.
-- Then plan authentication and persistence for the protected `POST /entries` route. Reconcile the generated API lint setup with the planned lint tooling when lint work begins.
+- Plan authentication and ownership enforcement for `POST /entries`, and choose the database representation of date-only `entryDate` before implementing persistence.
+- Reconcile the generated API's Oxlint setup with the original ESLint direction before settling the future CI lint gate.
 
 ## Blockers
 
@@ -34,10 +36,10 @@ Review the documentation checkpoint and let the user make the first Git commit a
 
 ## Important Decisions
 
-- The user is the developer; the AI agent is an engineering mentor. The agent may read and search relevant repository files with read-only commands. Edits and other shell commands require an explicit request.
+- The user is the developer; the AI agent is an engineering mentor. The agent may read and search relevant repository files with read-only commands and has standing authorization to maintain relevant Markdown documentation automatically. Other file edits and non-read-only commands require a direct request; the user normally commits and pushes.
 - Tinta is a private digital diary. Privacy and server-side ownership checks are core requirements.
 - The pnpm workspace contains the Expo mobile starter and NestJS 12 API starter. The user chose ESM and Vitest for the API.
-- The original brief names ESLint and Prettier. The API scaffold uses Oxlint and Prettier; lint tooling and a non-writing format check still need to be aligned and verified before CI.
+- The original brief names ESLint and Prettier. The API scaffold uses Oxlint and Prettier; both its current lint command and a non-writing format check have passed locally. The ESLint versus Oxlint choice and CI configuration remain open.
 - The planned create-entry contract requires nonblank content, a valid date-only `entryDate`, and verified ownership. Multiple entries may share one diary day.
 - Clerk, Prisma, and PostgreSQL remain planned and are not yet implemented.
 
@@ -49,6 +51,9 @@ Review the documentation checkpoint and let the user make the first Git commit a
 - The user ran `pnpm --filter mobile run web`; Expo bundled and the starter Home screen rendered at `localhost:8081`.
 - The user ran `pnpm --filter mobile exec tsc --noEmit`; it completed with no diagnostics.
 - The user ran the API in watch mode; TypeScript reported 0 errors, Nest started, and it mapped `GET /`. The later pnpm exit error followed the user's termination of watch mode.
-- The user ran `pnpm --filter api run test:e2e`; Vitest passed the generated test for `GET /`, asserting HTTP 200 and `Hello World!`.
-- A read-only Git inspection found `main` tracking `origin/main`, with the project files untracked. No baseline commit or push was made, and no GitHub Actions workflow exists. Recheck this state before following the Git workflow.
-- Android, iOS, lint, API unit tests, a production API build, and Tinta-specific behavior have not been verified.
+- The user ran `pnpm --filter api run test:e2e` before the type-only edit to that test file; Vitest passed the generated test for `GET /`, asserting HTTP 200 and `Hello World!`. It has not been rerun after the edit.
+- The user's push output confirmed `16446df` updated GitHub's `main`. Immediately after that push, a read-only `git status --short --branch` returned only `## main...origin/main`; later validator and documentation work is still local. No GitHub Actions workflow exists yet.
+- The user ran the focused `entryDate` Vitest file: 11 tests passed. The full API unit suite passed 2 files and 12 tests, including the generated controller test.
+- The user ran `pnpm --filter api exec tsc --noEmit` after the generated HTTP test's type fix; it completed without diagnostics.
+- The user ran `pnpm --filter api run lint`; Oxlint reported 0 warnings and 0 errors across 8 files. After setting Prettier's `endOfLine` to `auto` and formatting three files, the non-writing API TypeScript format check reported that all matched files use Prettier style.
+- Android, iOS, a production API build, and Tinta-specific HTTP, authentication, and persistence behavior have not been verified.

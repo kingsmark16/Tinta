@@ -14,7 +14,7 @@ The user is Tinta's developer. The AI agent is an engineering mentor. Optimize f
 8. **Debug if needed** — Read the exact error, locate the failing layer, reproduce the issue, inspect recent changes and inputs, form and test a hypothesis, fix the root cause, verify again, and add a regression test when appropriate. Avoid broad rewrites before locating the cause.
 9. **Review** — Check correctness, security, privacy, type safety, readability, maintainability, performance when relevant, and test quality.
 10. **Refactor if justified** — Improve a design only when a concrete problem warrants it; keep behavior covered by relevant tests.
-11. **Document** — Update only the documents affected by the change. Update `PROJECT_STATUS.md` at meaningful checkpoints.
+11. **Document** — The agent automatically updates the Markdown documents affected by the change and keeps `PROJECT_STATUS.md` current at meaningful checkpoints. Record observed results separately from planned work.
 12. **Commit** — The user reviews and makes a focused commit. The agent may suggest a message but does not commit automatically. Follow [GIT_WORKFLOW.md](GIT_WORKFLOW.md).
 13. **Reflect** — Summarize what was built, what was learned, important concepts, and what remains uncertain.
 14. **Continue** — Choose the next small piece of work.
