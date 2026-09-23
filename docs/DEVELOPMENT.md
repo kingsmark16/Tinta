@@ -1,6 +1,6 @@
 # Local Development
 
-**Status:** The pnpm workspace, Expo mobile starter, and NestJS API starter are scaffolded. Dependency installation, the mobile web starter, mobile TypeScript checking, API development startup, and the generated API end-to-end test have been verified. Tinta features, PostgreSQL, Prisma, and Clerk are not set up yet.
+**Status:** The pnpm workspace, Expo mobile starter, and NestJS API starter are scaffolded. Dependency installation, the mobile web starter, mobile TypeScript checking, API development startup, and the generated API HTTP test have been verified. The first Tinta domain rule, a standalone `entryDate` validator, has passed unit tests, API TypeScript checking, Oxlint, and a non-writing Prettier check. Entry HTTP routes, PostgreSQL, Prisma, and Clerk are not set up yet.
 
 ## Toolchain and remaining prerequisites
 
@@ -15,7 +15,7 @@ The original repository layout also proposed `.editorconfig` and `.npmrc` for sh
 
 ## Verified baseline commands
 
-Run these commands in PowerShell from the repository root, `C:\Users\marka\Desktop\Tinta`. The results below are from the user's runs; they describe the generated starters, not Tinta features.
+Run these commands in PowerShell from the repository root, `C:\Users\marka\Desktop\Tinta`. The results below are from the user's runs; they cover the generated starters and the standalone date validator, not a complete Tinta feature.
 
 | Command | Purpose and possible changes | Observed result and success check |
 | --- | --- | --- |
@@ -23,7 +23,11 @@ Run these commands in PowerShell from the repository root, `C:\Users\marka\Deskt
 | `pnpm --filter mobile run web` | Starts Expo's web development server. It stays running until stopped and may create local Expo cache files. | Expo bundled, and the starter Home screen rendered at `http://localhost:8081`. |
 | `pnpm --filter mobile exec tsc --noEmit` | Checks mobile TypeScript without emitting JavaScript; TypeScript may update local cache files. | Completed with no diagnostics. |
 | `pnpm --filter api run start:dev` | Starts NestJS in watch mode. It stays running until stopped and may write build output. | Watch compilation reported 0 errors, Nest started, and `GET /` was mapped. The later pnpm exit error followed the user's termination of watch mode. |
-| `pnpm --filter api run test:e2e` | Runs the generated Vitest end-to-end test, which starts the API in the test process and sends an HTTP request. It may write test cache files. | One test passed: `GET /` returned HTTP 200 and `Hello World!`. This does not verify mobile-to-API or authenticated behavior. |
+| `pnpm --filter api run test:e2e` | Runs the generated Vitest HTTP test, which starts the API in the test process and sends an HTTP request. It may write test cache files. | One test passed after the type-only edit: `GET /` returned HTTP 200 and `Hello World!`. This result does not verify mobile-to-API or authenticated behavior. |
+| `pnpm --filter api exec tsc --noEmit` | Checks API TypeScript without emitting JavaScript; TypeScript may update an ignored incremental cache. | Completed with no diagnostics after the generated HTTP test's type fix. |
+| `pnpm --filter api run test` | Runs the API Vitest unit suite without a running server or database; it may write local test cache files. | 2 files and 12 tests passed, including 11 date-validator cases and the generated controller test. |
+| `pnpm --filter api run lint` | Runs the API scaffold's type-aware Oxlint check on `src/` and `test/`; it does not rewrite source. | Reported 0 warnings and 0 errors across 8 files. |
+| `pnpm --filter api exec prettier --check "src/**/*.ts" "test/**/*.ts"` | Checks API TypeScript formatting without rewriting files. The API's `.prettierrc` uses `endOfLine: "auto"` for the existing Windows and Unix line endings. | Reported that all matched files use Prettier code style after the user formatted three files. |
 
 ## Planned full-stack setup sequence
 
@@ -39,7 +43,7 @@ Local, test, staging, and production databases and credentials must remain separ
 
 ## Commands still to establish or verify
 
-Document the actual commands for Docker Compose start/stop, Prisma validation, named development migrations, Prisma client generation, native mobile start, lint, a non-writing format check, API unit tests with Vitest, and production builds as those workflows are established and run. The original plan calls for ESLint and Prettier. The API scaffold currently defines Oxlint and a writing Prettier `format` script; project-wide ESLint and a format check have not been configured or verified. For each new command, include its working directory, purpose, side effects, expected output, and success check.
+Document the actual commands for Docker Compose start/stop, Prisma validation, named development migrations, Prisma client generation, native mobile start, and production builds as those workflows are established and run. API unit tests, Oxlint, and a non-writing Prettier command have passed locally; broader workspace checks and CI are not configured. The original plan calls for ESLint and Prettier, while the API scaffold currently uses Oxlint, so the lint-tool choice remains open. The API's `format` script writes files; the verified `prettier --check` command above does not. For each new command, include its working directory, purpose, side effects, expected output, and success check.
 
 ## Planned migration workflow
 
