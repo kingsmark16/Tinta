@@ -1,6 +1,6 @@
 # Git, Commits, Pushes, and CI
 
-**Status:** Git and GitHub are used for the repository. [PR #3](https://github.com/kingsmark16/Tinta/pull/3) is open and mergeable. Its first run caught missing CSS import declarations; commit `515bb1c` fixed them, and the subsequent CI run passed.
+**Status:** Git and GitHub are used for the repository. The first GitHub Actions workflow is merged into `main` in [PR #3](https://github.com/kingsmark16/Tinta/pull/3); both its final PR run and post-merge `main` run passed. Branch protection settings have not been checked.
 
 ## Ownership and branch strategy
 
@@ -23,10 +23,10 @@ The commands below are for the user to run in PowerShell from the repository roo
 
 Git ignores dependency folders, build output, logs, and local environment files, but inspect the staged file list and diff anyway. Commit the lockfile with dependency changes. Pushing requires GitHub access and network connectivity; Git may prompt for authentication. If the remote rejects a push because it has new commits, inspect the divergence and integrate safely; never use a force push as the routine fix. A feature branch can be pushed and reviewed in a pull request before merging to `main`.
 
-## Planned CI
+## CI and future checks
 
-The first workflow in `.github/workflows/ci.yml` is pushed in commit `6f78cb0` and is configured to run on pull requests to `main` and pushes to `main`. It installs from the frozen lockfile and checks API TypeScript, Oxlint, Prettier, Vitest unit tests, API HTTP tests, and mobile TypeScript. In [PR #3](https://github.com/kingsmark16/Tinta/pull/3), the first GitHub run caught missing declarations for CSS imports. Commit `515bb1c` added them and disabled incremental state for mobile TypeScript; the local type check and subsequent GitHub run passed. Future CI expansion should cover database integration tests against an isolated test database, backend build, broader mobile checks, and Prisma schema validation after those pieces exist and their local commands pass. Add test database setup and migrations when Prisma exists; use synthetic data and environment-specific credentials.
+The first workflow in `.github/workflows/ci.yml` was merged in PR #3. It runs on pull requests to `main` and pushes to `main`. It installs from the frozen lockfile and checks API TypeScript, Oxlint, Prettier, Vitest unit tests, API HTTP tests, and mobile TypeScript. Its first run caught missing declarations for CSS imports; commit `515bb1c` fixed them and disabled incremental state for mobile TypeScript. The final PR run and the post-merge `main` run passed. Future CI expansion should cover database integration tests against an isolated test database, backend build, broader mobile checks, and Prisma schema validation after those pieces exist and their local commands pass. Add test database setup and migrations when Prisma exists; use synthetic data and environment-specific credentials.
 
-The original project brief named Jest and ESLint. The user later chose **Vitest**, which is configured in the API scaffold. The initial CI workflow uses the generated API's existing passing Oxlint command; resolve the ESLint versus Oxlint direction before treating that choice as permanent. A non-writing API Prettier command has also passed locally and is included in the draft workflow, though it is not a package script. See [DECISIONS.md](DECISIONS.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
+The original project brief named Jest and ESLint. The user later chose **Vitest**, which is configured in the API scaffold. The CI workflow uses the generated API's existing Oxlint command; resolve the ESLint versus Oxlint direction before treating that choice as permanent. A non-writing API Prettier command has also passed locally and is included in the workflow, though it is not a package script. See [DECISIONS.md](DECISIONS.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
 
 CI should report failures without printing tokens, diary content, or database credentials. Protect `main` with required checks and review rules when those checks are trustworthy. A green CI run does not replace manual checks for mobile behavior, privacy, and release readiness. Deployment remains a separate, controlled workflow described in [DEPLOYMENT.md](DEPLOYMENT.md).

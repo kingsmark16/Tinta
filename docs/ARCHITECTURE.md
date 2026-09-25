@@ -13,7 +13,7 @@ React Native app (Expo, Expo Router)
   → Prisma → PostgreSQL
 ```
 
-The pnpm workspace contains `apps/mobile` and `apps/api`, with repository guidance in `docs`. Both starters use TypeScript. Add shared packages such as `packages/types` or `packages/config` only when real reuse exists. GitHub workflow files belong under `.github/workflows` when local checks are ready for CI; no workflow exists yet.
+The pnpm workspace contains `apps/mobile` and `apps/api`, with repository guidance in `docs`. Both starters use TypeScript. Add shared packages such as `packages/types` or `packages/config` only when real reuse exists. GitHub Actions checks live under `.github/workflows`; the initial CI workflow checks API quality and tests plus mobile TypeScript.
 
 ## Mobile responsibilities
 
