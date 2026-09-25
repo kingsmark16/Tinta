@@ -1,6 +1,6 @@
 # Git, Commits, Pushes, and CI
 
-**Status:** Git and GitHub are used for the repository. The first CI workflow is committed locally on `ci/github-actions-checks` as `6f78cb0`, but has not run on GitHub yet. See [PROJECT_STATUS.md](PROJECT_STATUS.md) for the current branch and checkpoint state.
+**Status:** Git and GitHub are used for the repository. The first CI workflow is pushed on `ci/github-actions-checks` as `6f78cb0`; it has not run on GitHub because no pull request is open yet. See [PROJECT_STATUS.md](PROJECT_STATUS.md) for the current branch and checkpoint state.
 
 ## Ownership and branch strategy
 
@@ -25,7 +25,7 @@ Git ignores dependency folders, build output, logs, and local environment files,
 
 ## Planned CI
 
-The first workflow in `.github/workflows/ci.yml` is committed locally as `6f78cb0` and is configured to run on pull requests to `main` and pushes to `main`. It installs from the frozen lockfile and checks API TypeScript, Oxlint, Prettier, Vitest unit tests, API HTTP tests, and mobile TypeScript. These commands passed locally, but the combined workflow has not run on GitHub yet. Review the CI result before marking any check required. Future CI expansion should cover database integration tests against an isolated test database, backend build, broader mobile checks, and Prisma schema validation after those pieces exist and their local commands pass. Add test database setup and migrations when Prisma exists; use synthetic data and environment-specific credentials.
+The first workflow in `.github/workflows/ci.yml` is pushed in commit `6f78cb0` and is configured to run on pull requests to `main` and pushes to `main`. It installs from the frozen lockfile and checks API TypeScript, Oxlint, Prettier, Vitest unit tests, API HTTP tests, and mobile TypeScript. These commands passed locally; the combined workflow has not run on GitHub because the branch has no open pull request yet. Review the CI result before marking any check required. Future CI expansion should cover database integration tests against an isolated test database, backend build, broader mobile checks, and Prisma schema validation after those pieces exist and their local commands pass. Add test database setup and migrations when Prisma exists; use synthetic data and environment-specific credentials.
 
 The original project brief named Jest and ESLint. The user later chose **Vitest**, which is configured in the API scaffold. The initial CI workflow uses the generated API's existing passing Oxlint command; resolve the ESLint versus Oxlint direction before treating that choice as permanent. A non-writing API Prettier command has also passed locally and is included in the draft workflow, though it is not a package script. See [DECISIONS.md](DECISIONS.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
 
