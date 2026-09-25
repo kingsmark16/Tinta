@@ -21,14 +21,15 @@ Implement the protected `POST /entries` slice in layers, starting with request D
 - The user added a pure `entryDate` validator for exact `YYYY-MM-DD` calendar dates and 11 focused Vitest cases, including leap-year and invalid-input cases.
 - Changed the generated API HTTP test to use the Node HTTP server type for TypeScript checking. The user configured Prettier to preserve existing line-ending styles and formatted the three files reported by the check.
 - The user merged [PR #1](https://github.com/kingsmark16/Tinta/pull/1), `feat(entries): validate diary dates`, into `main` at commit `c000c37` (`Merge pull request #1 from kingsmark16/feat/entry-date-validation`) and synchronized local `main` to `origin/main`.
+- The user committed the create-entry DTO, global validation pipe configuration, focused Vitest spec, dependency lockfile changes, and related documentation as `7233999` (`feat(entries): add create-entry validation`) on `feat/entry-create-validation`, then pushed the branch to `origin`.
 
 ## In Progress
 
-- Work is on `feat/entry-create-validation`. The user added `CreateEntryDto` with required nonblank `content`, a valid `entryDate` through the existing date helper, and an optional string `title`. The user also registered a global `ValidationPipe` in `main.ts` with transformation disabled and unknown body fields forbidden. The focused DTO and pipe spec passed all six cases. No entry controller uses the DTO, so entry requests are not validated over HTTP. Authentication, persistence, and CI are also not implemented.
+- Work is on pushed branch `feat/entry-create-validation`, which tracks `origin/feat/entry-create-validation`. The user added `CreateEntryDto` with required nonblank `content`, a valid `entryDate` through the existing date helper, and an optional string `title`. The user also registered a global `ValidationPipe` in `main.ts` with transformation disabled and unknown body fields forbidden. The focused DTO and pipe spec passed all six cases. A pull request has not been confirmed yet. No entry controller uses the DTO, so entry requests are not validated over HTTP. Authentication, persistence, and CI are also not implemented.
 
 ## Next
 
-- Review and stage the focused validation checkpoint on `feat/entry-create-validation`, then commit and push it for review. The DTO will only affect HTTP requests after a route binds it with `@Body()`; keep the route protected when it is added.
+- Open a pull request from `feat/entry-create-validation` into `main` for the validation checkpoint and review its diff. The DTO will only affect HTTP requests after a route binds it with `@Body()`; keep the route protected when it is added.
 - Then implement Clerk token verification, derive ownership from the verified identity, and add owner-scoped persistence. Use the PostgreSQL `date` decision for `entryDate`, with explicit UTC conversion tests when Prisma is installed.
 - Review the existing TypeScript/`tsconfck` and React Native Metro peer mismatches before setting up CI or relying on native mobile checks.
 - Reconcile the generated API's Oxlint setup with the original ESLint direction before settling the future CI lint gate.
@@ -64,6 +65,7 @@ Implement the protected `POST /entries` slice in layers, starting with request D
 - The user ran `pnpm --filter api run lint` after adding the DTO spec; type-aware Oxlint reported 0 warnings and 0 errors across 10 files with 111 rules.
 - The user ran `pnpm --filter api exec prettier --check "src/**/*.ts" "test/**/*.ts"` after adding the DTO spec; Prettier reported that all matched files use its code style. A read-only diff review found only the expected API dependency, pipe, DTO, spec, lockfile, and documentation changes; `git diff --check` found no whitespace errors in tracked changes.
 - The user corrected the DTO's `EntryDateConstraint` spelling in both the class declaration and its `@Validate` reference. The agent inspected those references and ran `pnpm --filter api exec tsc --noEmit --incremental false` after the rename; it exited with code 0 and no diagnostics, without writing compiler output.
+- The user staged the 10 intended files; `git diff --cached --check` exited without whitespace errors. Commit `7233999` contains those 10 files, and the push created `origin/feat/entry-create-validation` with upstream tracking. `git status --short --branch` showed a clean local branch tracking the remote immediately after the push.
 - The user ran the focused `entryDate` Vitest file: 11 tests passed. The full API unit suite passed 2 files and 12 tests, including the generated controller test.
 - The user ran `pnpm --filter api exec tsc --noEmit` after the generated HTTP test's type fix; it completed without diagnostics.
 - The user ran `pnpm --filter api run lint`; Oxlint reported 0 warnings and 0 errors across 8 files. After setting Prettier's `endOfLine` to `auto` and formatting three files, the non-writing API TypeScript format check reported that all matched files use Prettier style.
