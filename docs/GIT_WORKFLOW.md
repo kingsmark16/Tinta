@@ -1,6 +1,6 @@
 # Git, Commits, Pushes, and CI
 
-**Status:** Git and GitHub are used for the repository. The first CI workflow is running in [PR #3](https://github.com/kingsmark16/Tinta/pull/3). Its initial run passed the API checks but failed mobile TypeScript because CSS imports had no declarations. A local fix is in progress; mobile TypeScript now passes locally. See [PROJECT_STATUS.md](PROJECT_STATUS.md) for the current branch and checkpoint state.
+**Status:** Git and GitHub are used for the repository. [PR #3](https://github.com/kingsmark16/Tinta/pull/3) is open and mergeable. Its first run caught missing CSS import declarations; commit `515bb1c` fixed them, and the subsequent CI run passed.
 
 ## Ownership and branch strategy
 
@@ -25,7 +25,7 @@ Git ignores dependency folders, build output, logs, and local environment files,
 
 ## Planned CI
 
-The first workflow in `.github/workflows/ci.yml` is pushed in commit `6f78cb0` and is configured to run on pull requests to `main` and pushes to `main`. It installs from the frozen lockfile and checks API TypeScript, Oxlint, Prettier, Vitest unit tests, API HTTP tests, and mobile TypeScript. In [PR #3](https://github.com/kingsmark16/Tinta/pull/3), the first GitHub run passed the install and API checks but failed mobile TypeScript because imports of CSS files lacked declarations. The local fix adds CSS declarations and sets the mobile type check to ignore incremental state; the local type check passes. Push the fix and confirm CI passes before marking any check required. Future CI expansion should cover database integration tests against an isolated test database, backend build, broader mobile checks, and Prisma schema validation after those pieces exist and their local commands pass. Add test database setup and migrations when Prisma exists; use synthetic data and environment-specific credentials.
+The first workflow in `.github/workflows/ci.yml` is pushed in commit `6f78cb0` and is configured to run on pull requests to `main` and pushes to `main`. It installs from the frozen lockfile and checks API TypeScript, Oxlint, Prettier, Vitest unit tests, API HTTP tests, and mobile TypeScript. In [PR #3](https://github.com/kingsmark16/Tinta/pull/3), the first GitHub run caught missing declarations for CSS imports. Commit `515bb1c` added them and disabled incremental state for mobile TypeScript; the local type check and subsequent GitHub run passed. Future CI expansion should cover database integration tests against an isolated test database, backend build, broader mobile checks, and Prisma schema validation after those pieces exist and their local commands pass. Add test database setup and migrations when Prisma exists; use synthetic data and environment-specific credentials.
 
 The original project brief named Jest and ESLint. The user later chose **Vitest**, which is configured in the API scaffold. The initial CI workflow uses the generated API's existing passing Oxlint command; resolve the ESLint versus Oxlint direction before treating that choice as permanent. A non-writing API Prettier command has also passed locally and is included in the draft workflow, though it is not a package script. See [DECISIONS.md](DECISIONS.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
 
