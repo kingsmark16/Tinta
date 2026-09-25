@@ -2,11 +2,11 @@
 
 ## Current Phase
 
-The pnpm workspace, Expo mobile starter, and NestJS API starter are scaffolded. The mobile starter was verified on web, and the API started and passed its generated Vitest HTTP test. The first Tinta domain rule, a standalone API validator for `entryDate`, is merged into `main` and unit-tested. Entry HTTP routes, authentication, and persistence remain planned.
+The pnpm workspace, Expo mobile starter, and NestJS API starter are scaffolded. The mobile starter was verified on web, and the API started and passed its generated Vitest HTTP test. The standalone `entryDate` validator and create-entry DTO validation are merged into `main` and covered by focused tests. Entry HTTP routes, authentication, and persistence remain planned.
 
 ## Current Goal
 
-Implement the protected `POST /entries` slice in layers, starting with request DTO validation. NestJS `ValidationPipe` with class-validator is the chosen approach. The date-only database representation is PostgreSQL `date`; authentication and persistence are not implemented.
+Establish a small GitHub Actions CI gate for checks already verified locally, then continue the protected `POST /entries` slice. NestJS `ValidationPipe` with class-validator is configured, but no entry route uses the DTO yet. The date-only database representation is planned as PostgreSQL `date`; authentication and persistence are not implemented.
 
 ## Completed
 
@@ -22,18 +22,19 @@ Implement the protected `POST /entries` slice in layers, starting with request D
 - Changed the generated API HTTP test to use the Node HTTP server type for TypeScript checking. The user configured Prettier to preserve existing line-ending styles and formatted the three files reported by the check.
 - The user merged [PR #1](https://github.com/kingsmark16/Tinta/pull/1), `feat(entries): validate diary dates`, into `main` at commit `c000c37` (`Merge pull request #1 from kingsmark16/feat/entry-date-validation`) and synchronized local `main` to `origin/main`.
 - The user committed the create-entry DTO, global validation pipe configuration, focused Vitest spec, dependency lockfile changes, and related documentation as `7233999` (`feat(entries): add create-entry validation`) on `feat/entry-create-validation`, then pushed the branch to `origin`.
-- The user opened [PR #2](https://github.com/kingsmark16/Tinta/pull/2) from `feat/entry-create-validation` into `main` for the create-entry validation checkpoint. The PR includes commits `7233999` and `fb3172d`.
+- The user merged [PR #2](https://github.com/kingsmark16/Tinta/pull/2), the create-entry validation checkpoint, into `main` at merge commit `88540c2`. The final PR also included documentation commit `949838d`.
 
 ## In Progress
 
-- Work is on pushed branch `feat/entry-create-validation`, which tracks `origin/feat/entry-create-validation`, with [PR #2](https://github.com/kingsmark16/Tinta/pull/2) open against `main`. The user added `CreateEntryDto` with required nonblank `content`, a valid `entryDate` through the existing date helper, and an optional string `title`. The user also registered a global `ValidationPipe` in `main.ts` with transformation disabled and unknown body fields forbidden. The focused DTO and pipe spec passed all six cases. No entry controller uses the DTO, so entry requests are not validated over HTTP. Authentication, persistence, and CI are also not implemented.
+- Work is on `ci/github-actions-checks`, created from local `main` after PR #2 merged. A first GitHub Actions workflow is drafted to check existing API and mobile commands, but has not run on GitHub. `CreateEntryDto` requires nonblank `content`, a valid `entryDate` through the existing date helper, and an optional string `title`. A global `ValidationPipe` is registered in `main.ts` with transformation disabled and unknown body fields forbidden. The focused DTO and pipe spec passed all six cases. No entry controller uses the DTO, so entry requests are not validated over HTTP. Authentication and persistence are not implemented.
 
 ## Next
 
-- Include this status update on [PR #2](https://github.com/kingsmark16/Tinta/pull/2), then merge after the user's file review when ready. GitHub reports the PR is mergeable and has no configured checks. The DTO will only affect HTTP requests after a route binds it with `@Body()`; keep the route protected when it is added.
+- Review and commit the draft GitHub Actions workflow and documentation on `ci/github-actions-checks`, push the branch, and open a PR into `main` to verify the first GitHub-hosted run. Its frozen install and all listed API/mobile checks passed locally. Do not require its check on `main` until the PR run is trustworthy. GitHub showed no checks on PR #2 because the workflow did not exist then.
+- Then continue the entry slice. The DTO will only affect HTTP requests after a route binds it with `@Body()`; keep the route protected when it is added.
 - Then implement Clerk token verification, derive ownership from the verified identity, and add owner-scoped persistence. Use the PostgreSQL `date` decision for `entryDate`, with explicit UTC conversion tests when Prisma is installed.
-- Review the existing TypeScript/`tsconfck` and React Native Metro peer mismatches before setting up CI or relying on native mobile checks.
-- Reconcile the generated API's Oxlint setup with the original ESLint direction before settling the future CI lint gate.
+- Track the existing TypeScript/`tsconfck` and React Native Metro peer mismatches when running a frozen install in CI; investigate if they become failures. Native mobile checks remain separate from mobile TypeScript.
+- Use the API's existing passing Oxlint command for the first CI workflow. Reconcile Oxlint with the original ESLint direction before treating that choice as permanent.
 
 ## Blockers
 
@@ -67,7 +68,15 @@ Implement the protected `POST /entries` slice in layers, starting with request D
 - The user ran `pnpm --filter api exec prettier --check "src/**/*.ts" "test/**/*.ts"` after adding the DTO spec; Prettier reported that all matched files use its code style. A read-only diff review found only the expected API dependency, pipe, DTO, spec, lockfile, and documentation changes; `git diff --check` found no whitespace errors in tracked changes.
 - The user corrected the DTO's `EntryDateConstraint` spelling in both the class declaration and its `@Validate` reference. The agent inspected those references and ran `pnpm --filter api exec tsc --noEmit --incremental false` after the rename; it exited with code 0 and no diagnostics, without writing compiler output.
 - The user staged the 10 intended files; `git diff --cached --check` exited without whitespace errors. Commit `7233999` contains those 10 files, and the push created `origin/feat/entry-create-validation` with upstream tracking. `git status --short --branch` showed a clean local branch tracking the remote immediately after the push.
-- The user's screenshot and the public GitHub page confirmed [PR #2](https://github.com/kingsmark16/Tinta/pull/2) is open into `main` from `feat/entry-create-validation` with two commits and the documented description. The screenshot showed 10 changed files. The user reported completing the PR review step. A later read-only `gh pr view 2` reported `MERGEABLE`, no review decision, and an empty status-check list; the live title still read `Feat/entry create validation` at that check.
+- The user's screenshot and the public GitHub page confirmed [PR #2](https://github.com/kingsmark16/Tinta/pull/2) targeted `main` from `feat/entry-create-validation` with 10 changed files. The user reported completing the PR review step. A later read-only `gh pr view 2` reported `MERGEABLE`, no review decision, and an empty status-check list. A subsequent `gh pr view 2` confirmed `MERGED` at `88540c2`; the user fast-forwarded local `main` to `origin/main`, and `git status --short --branch` showed clean `main...origin/main`.
+- The user created `ci/github-actions-checks` from synchronized `main`. The agent added `.github/workflows/ci.yml` with read-only token permissions, Node 24, pnpm 12.5.1, frozen-lockfile install, and existing API/mobile checks. A non-writing Prettier check parsed the YAML and passed; `git diff --check` found no whitespace errors in tracked documentation changes. The workflow has not run on GitHub.
+- The user ran `pnpm --filter api run test` on the CI branch. Vitest passed 3 files and 18 tests, including all 11 date cases, 6 DTO cases, and the generated controller test. Its tsconfig paths plugin suggestion did not fail the run.
+- The user ran `pnpm --filter api run test:e2e` on the CI branch. Vitest passed the generated starter `GET /` HTTP test (1 file, 1 test). Its tsconfig paths plugin suggestion did not fail the run; no entry route was exercised.
+- The user ran `pnpm --filter api exec tsc --noEmit --incremental false` on the CI branch. It returned without TypeScript diagnostics or generated output.
+- The user ran `pnpm --filter api run lint` on the CI branch. Type-aware Oxlint reported 0 warnings and 0 errors across 10 files with 111 rules.
+- The user ran `pnpm --filter api exec prettier --check "src/**/*.ts" "test/**/*.ts"` on the CI branch. Prettier reported that all matched files use its code style.
+- The user ran `pnpm --filter mobile exec tsc --noEmit` on the CI branch. It returned without TypeScript diagnostics; Android and iOS builds were not run.
+- The user ran `pnpm install --frozen-lockfile` on the CI branch. pnpm 12.5.1 reported that the lockfile passed supply-chain policies, was up to date, skipped resolution, and finished successfully in 252 ms. `git status --short --branch` then showed only the expected workflow and documentation edits; the lockfile was unchanged.
 - The user ran the focused `entryDate` Vitest file: 11 tests passed. The full API unit suite passed 2 files and 12 tests, including the generated controller test.
 - The user ran `pnpm --filter api exec tsc --noEmit` after the generated HTTP test's type fix; it completed without diagnostics.
 - The user ran `pnpm --filter api run lint`; Oxlint reported 0 warnings and 0 errors across 8 files. After setting Prettier's `endOfLine` to `auto` and formatting three files, the non-writing API TypeScript format check reported that all matched files use Prettier style.

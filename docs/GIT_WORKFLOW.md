@@ -1,6 +1,6 @@
 # Git, Commits, Pushes, and CI
 
-**Status:** Git and GitHub are used for the repository. No CI workflow is configured yet. See [PROJECT_STATUS.md](PROJECT_STATUS.md) for the current branch and checkpoint state.
+**Status:** Git and GitHub are used for the repository. A first CI workflow is drafted on `ci/github-actions-checks` but has not run on GitHub yet. See [PROJECT_STATUS.md](PROJECT_STATUS.md) for the current branch and checkpoint state.
 
 ## Ownership and branch strategy
 
@@ -25,8 +25,8 @@ Git ignores dependency folders, build output, logs, and local environment files,
 
 ## Planned CI
 
-Add GitHub Actions only after each equivalent local command is established and passes. Prefer checks on pull requests to `main` and relevant pushes. Once implemented, the CI pipeline should cover a frozen lockfile install, lint, a non-writing Prettier format check, TypeScript checks, Vitest unit tests, API HTTP tests, database integration tests against an isolated test database, backend build, mobile static checks, and Prisma schema validation. Add test database setup and migrations when Prisma exists; use synthetic data and environment-specific credentials.
+The first workflow in `.github/workflows/ci.yml` is drafted to run on pull requests to `main` and pushes to `main`. It installs from the frozen lockfile and checks API TypeScript, Oxlint, Prettier, Vitest unit tests, API HTTP tests, and mobile TypeScript. These are existing commands, but the combined workflow has not run on GitHub yet. Review the CI result before marking any check required. Future CI expansion should cover database integration tests against an isolated test database, backend build, broader mobile checks, and Prisma schema validation after those pieces exist and their local commands pass. Add test database setup and migrations when Prisma exists; use synthetic data and environment-specific credentials.
 
-The original project brief named Jest and ESLint. The user later chose **Vitest**, which is configured in the API scaffold. ESLint remains the intended lint direction, while the generated API currently uses Oxlint; its local lint command has passed, but resolve the tooling difference before settling the CI lint gate. A non-writing API Prettier command has also passed locally, though it is not yet a package script or CI check. See [DECISIONS.md](DECISIONS.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
+The original project brief named Jest and ESLint. The user later chose **Vitest**, which is configured in the API scaffold. The initial CI workflow uses the generated API's existing passing Oxlint command; resolve the ESLint versus Oxlint direction before treating that choice as permanent. A non-writing API Prettier command has also passed locally and is included in the draft workflow, though it is not a package script. See [DECISIONS.md](DECISIONS.md) and [DEVELOPMENT.md](DEVELOPMENT.md).
 
 CI should report failures without printing tokens, diary content, or database credentials. Protect `main` with required checks and review rules when those checks are trustworthy. A green CI run does not replace manual checks for mobile behavior, privacy, and release readiness. Deployment remains a separate, controlled workflow described in [DEPLOYMENT.md](DEPLOYMENT.md).
