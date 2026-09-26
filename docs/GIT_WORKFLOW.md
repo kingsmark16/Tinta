@@ -1,6 +1,6 @@
 # Git, Commits, Pushes, and CI
 
-**Status:** Git and GitHub are used for the repository. The first GitHub Actions workflow is merged into `main` in [PR #3](https://github.com/kingsmark16/Tinta/pull/3); both its final PR run and post-merge `main` run passed. Branch protection settings have not been checked.
+**Status:** PR #3 introduced GitHub Actions CI, and PR #4 merged Clerk API/mobile authentication into main at c50deb0. The final PR run and post-merge main run passed. The API HTTP test step uses the repository Actions secrets CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY; their values are kept out of source control. Branch protection settings have not been checked.
 
 ## Ownership and branch strategy
 
@@ -24,6 +24,8 @@ The commands below are for the user to run in PowerShell from the repository roo
 Git ignores dependency folders, build output, logs, and local environment files, but inspect the staged file list and diff anyway. Commit the lockfile with dependency changes. Pushing requires GitHub access and network connectivity; Git may prompt for authentication. If the remote rejects a push because it has new commits, inspect the divergence and integrate safely; never use a force push as the routine fix. A feature branch can be pushed and reviewed in a pull request before merging to `main`.
 
 ## CI and future checks
+
+The API HTTP test step receives CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY from repository Actions secrets. Their values are scoped to that step and must stay private and out of Git. PR #4 and its post-merge main CI run passed after these secrets were configured.
 
 The first workflow in `.github/workflows/ci.yml` was merged in PR #3. It runs on pull requests to `main` and pushes to `main`. It installs from the frozen lockfile and checks API TypeScript, Oxlint, Prettier, Vitest unit tests, API HTTP tests, and mobile TypeScript. Its first run caught missing declarations for CSS imports; commit `515bb1c` fixed them and disabled incremental state for mobile TypeScript. The final PR run and the post-merge `main` run passed. Future CI expansion should cover database integration tests against an isolated test database, backend build, broader mobile checks, and Prisma schema validation after those pieces exist and their local commands pass. Add test database setup and migrations when Prisma exists; use synthetic data and environment-specific credentials.
 
