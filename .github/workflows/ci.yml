@@ -48,6 +48,9 @@ jobs:
 
       - name: Test API HTTP
         run: pnpm --filter api run test:e2e
+        env:
+          CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
       - name: Check mobile types
         run: pnpm --filter mobile exec tsc --noEmit --incremental false

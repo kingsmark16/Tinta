@@ -20,6 +20,8 @@ Use a modern, understated palette drawn from clean off-white, soft neutral gray,
 
 Avoid warm ivory, yellow-heavy cream or paper colors, generic purple SaaS themes, neon-heavy gradients, and excessive glass effects.
 
+Implement app-owned mobile UI styling with NativeWind across native and web targets. Prefer NativeWind classes for new and updated screens and components; reserve `StyleSheet` or platform-specific styling for native API or platform behavior that needs it. This is an implementation requirement, not a visual style choice. NativeWind and Tailwind dependencies, Tailwind config, CSS directives, Expo Babel configuration, Metro wrapper, Expo's Metro web bundler setting, and the single root CSS import are in place. Expo web bundling succeeds; utility-class visual verification and migration of the generated starter are pending.
+
 ## Later phases
 
 Media, notifications, writing streaks, mood statistics, On This Day, Memory Capsules, biometrics, offline SQLite support, export, and optional AI reflection are future possibilities. They are outside the initial MVP and need their own design, privacy review, and tests before implementation. Any AI feature must be optional and disclose external transmission of diary content; see [SECURITY.md](SECURITY.md).
