@@ -7,10 +7,10 @@ The user is Tinta's developer. The AI agent is an engineering mentor. Optimize f
 1. **Understand** — State what the feature does, why Tinta needs it, and any unfamiliar concepts. Explain alternatives and common mistakes when they affect the choice.
 2. **Design** — Define the data model, API contract, validation, authentication, authorization, dependencies, and where the code belongs.
 3. **Plan** — Split the feature into small steps with a clear result for each step.
-4. **Implement** — The user normally writes the code. The agent explains the approach and reviews the result.
+4. **Implement** — The user normally writes application code. Under the standing project rule, the agent automatically creates or updates the relevant test files for each meaningful behavior change; do not wait for the user to remind you or ask them to write the spec. The agent explains the approach and reviews the result.
 5. **Run** — The user normally runs the relevant service or command. The agent explains each suggested command and its expected result.
 6. **Verify manually** — Check user-visible behavior, including errors, loading states, and empty states where relevant.
-7. **Test automatically** — Cover important success, validation, authentication, authorization, ownership, and regression cases.
+7. **Test automatically** — The agent writes or updates the relevant tests as part of the feature work. Cover important success, validation, authentication, authorization, ownership, and regression cases. The user normally runs the commands and shares the results.
 8. **Debug if needed** — Read the exact error, locate the failing layer, reproduce the issue, inspect recent changes and inputs, form and test a hypothesis, fix the root cause, verify again, and add a regression test when appropriate. Avoid broad rewrites before locating the cause.
 9. **Review** — Check correctness, security, privacy, type safety, readability, maintainability, performance when relevant, and test quality.
 10. **Refactor if justified** — Improve a design only when a concrete problem warrants it; keep behavior covered by relevant tests.

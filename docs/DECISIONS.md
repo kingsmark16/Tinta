@@ -10,6 +10,10 @@ This file records consequential technical choices and their tradeoffs. **Accepte
 
 **Status:** Accepted. **Context:** Tinta is a mobile diary. **Decision:** Use React Native, Expo, Expo Router, and TypeScript. **Reason:** This establishes a consistent mobile and navigation stack. **Tradeoff:** Native capabilities, build profiles, and offline behavior need separate design as those needs arise.
 
+## Decision: NativeWind for mobile UI styling
+
+**Status:** Accepted; the web bundle and visible utility-class rendering are verified, while native verification remains in progress. **Context:** Tinta's Expo app targets native platforms and web, and the user wants a consistent utility-based styling approach. **Decision:** Use NativeWind for app-owned UI styling across those targets. Prefer NativeWind classes for new and updated screens and components; use `StyleSheet` or platform-specific styling only when a native API or platform behavior requires it. **Reason:** A shared styling approach keeps the mobile UI implementation consistent across targets. **Tradeoff:** NativeWind needs Expo-compatible dependency and configuration setup, and platform-specific differences still need deliberate handling. NativeWind 4.2.7 and Tailwind CSS 3 are installed; the Tailwind config, global CSS directives, Expo and NativeWind Babel presets, Metro wrapper, Expo web bundler selection, and root CSS import are in place. After the first bundle failed to resolve `react-native-css-interop/jsx-runtime`, the user added `react-native-css-interop@0.2.7` directly. A retry successfully bundled and started Expo web. The user visually confirmed the Tailwind background, spacing, corner, and text utilities on a temporary Home screen panel and moved the panel outside `ThemedText`; the corrected web layout and native builds still need verification. The generated starter has not been migrated.
+
 ## Decision: diary-first MVP
 
 **Status:** Accepted. **Context:** Tinta could expand into many adjacent features. **Decision:** Keep private writing, moods, memories, and calendar recall at the center; build the listed MVP before media, offline support, or optional AI reflection. **Reason:** The product should feel personal and calm rather than like a social network or generic dashboard. **Tradeoff:** Attractive later features are deferred until the core diary experience is reliable. See [PRODUCT.md](PRODUCT.md).
@@ -17,6 +21,14 @@ This file records consequential technical choices and their tradeoffs. **Accepte
 ## Decision: Clerk for authentication
 
 **Status:** Accepted. **Context:** Private diary data requires a reliable user identity. **Decision:** Clerk manages sign-in and sessions; the NestJS API verifies tokens and enforces authorization. **Reason:** Identity management and application ownership have distinct responsibilities. **Tradeoff:** Tinta depends on Clerk configuration and availability, and local user synchronization still needs a precise design.
+
+## Decision: email and password authentication with verified sign-up
+
+**Status:** Accepted; the mobile flow is implemented but live verification is pending. **Context:** The user wants password-based accounts, and the previous `signUpIfMissing` email-code flow could not set a password after transferring a verified identity into sign-up. **Decision:** Keep sign-in and sign-up as separate Clerk password flows. Verify a new account's email with a code, and support email-code MFA/device-trust challenges after sign-in when Clerk reports that factor as available. Keep both password options enabled in Clerk Dashboard. **Reason:** The user can choose and use a password at account creation without relying on unsupported transfer behavior. **Tradeoff:** Separate paths can expose account-existence differences during sign-up. Keep sign-in errors generic and configure Clerk's user-enumeration protections and rate limits before production. Password reset, other MFA methods, and production configuration are future work.
+
+## Decision: use Clerk's Express SDK with NestJS
+
+**Status:** Accepted and implemented for the current `GET /auth/me` slice. **Context:** The NestJS API uses its default Express adapter, and Clerk provides an Express SDK. **Decision:** Use `@clerk/express` `clerkMiddleware()` to verify incoming Clerk session tokens and attach auth state to the Express request. Protect NestJS controllers with a guard that uses Clerk's `getAuth()` and requires both `isAuthenticated` and a user ID. The auth controller returns only the verified caller's Clerk user ID. **Reason:** This uses Clerk's maintained Express integration instead of hand-parsing or decoding JWTs, and separates token verification from NestJS route authorization. **Tradeoff:** The auth boundary depends on Nest's Express adapter; changing to Fastify would require a different Clerk integration. The middleware alone does not protect routes, so protected controllers still need the guard. Clerk's `authorizedParties` allowlist must match the actual clients' origins when those are established. A valid real session and Expo client flow remain unverified.
 
 ## Decision: NestJS REST API
 
