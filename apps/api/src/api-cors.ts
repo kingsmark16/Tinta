@@ -5,7 +5,7 @@ export function getApiCorsOptions(expoWebOrigin?: string) {
 
   return {
     origin: [allowedOrigin],
-    methods: ['GET', 'OPTIONS'],
+    methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Authorization', 'Content-Type'],
   };
 }

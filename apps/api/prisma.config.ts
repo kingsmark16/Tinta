@@ -1,0 +1,17 @@
+import { fileURLToPath } from 'node:url';
+import { config as loadEnv } from 'dotenv';
+import { defineConfig, env } from 'prisma/config';
+
+loadEnv({
+  path: fileURLToPath(new URL('../../.env.local', import.meta.url)),
+});
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
+  migrations: {
+    path: 'prisma/migrations',
+  },
+  datasource: {
+    url: env('DATABASE_URL'),
+  },
+});

@@ -36,6 +36,18 @@ describe('AppController (e2e)', () => {
       .expect(401);
   });
 
+  it('/entries rejects a request without a session (POST)', () => {
+    return request(app.getHttpServer()).post('/entries').send({}).expect(401);
+  });
+
+  it('/entries rejects an invalid bearer token (POST)', () => {
+    return request(app.getHttpServer())
+      .post('/entries')
+      .set('Authorization', 'Bearer not-a-valid-clerk-token')
+      .send({})
+      .expect(401);
+  });
+
   afterEach(async () => {
     await app.close();
   });
