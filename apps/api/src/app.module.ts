@@ -4,6 +4,7 @@ import { AppService } from './app.service.js';
 import { ConfigModule } from '@nestjs/config';
 import { ClerkAuthGuard } from './auth/clerk-auth.guard.js';
 import { AuthController } from './auth/auth.controller.js';
+import { EntriesModule } from './entries/entries.module.js';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AuthController } from './auth/auth.controller.js';
       isGlobal: true,
       envFilePath: '../../.env.local',
     }),
+    EntriesModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, ClerkAuthGuard],

@@ -1,7 +1,9 @@
 packages:
   - "apps/*"
 allowBuilds:
+  '@prisma/engines': true
   browser-tabs-lock: false
   bufferutil: false
   core-js: false
+  prisma: true
   utf-8-validate: false

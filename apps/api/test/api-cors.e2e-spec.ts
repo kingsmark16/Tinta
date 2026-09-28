@@ -25,18 +25,21 @@ describe('API CORS (e2e)', () => {
     await app.init();
   });
 
-  it('allows the Expo web origin to preflight a bearer-authenticated GET', async () => {
+  it('allows the Expo web origin to preflight a bearer-authenticated entry POST', async () => {
     const response = await request(app.getHttpServer())
-      .options('/auth/me')
+      .options('/entries')
       .set('Origin', expoWebOrigin)
-      .set('Access-Control-Request-Method', 'GET')
-      .set('Access-Control-Request-Headers', 'authorization')
+      .set('Access-Control-Request-Method', 'POST')
+      .set('Access-Control-Request-Headers', 'authorization,content-type')
       .expect(204);
 
     expect(response.headers['access-control-allow-origin']).toBe(expoWebOrigin);
-    expect(response.headers['access-control-allow-methods']).toContain('GET');
+    expect(response.headers['access-control-allow-methods']).toContain('POST');
     expect(response.headers['access-control-allow-headers']).toMatch(
       /authorization/i,
+    );
+    expect(response.headers['access-control-allow-headers']).toMatch(
+      /content-type/i,
     );
   });
 
